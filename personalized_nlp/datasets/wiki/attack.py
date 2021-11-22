@@ -47,9 +47,12 @@ class AttackDataModule(WikiDataModule):
         self.data = pd.read_csv(
             self.data_dir / 'attack_annotated_comments.tsv', sep='\t')
         self.data['text'] = self.data['comment']
+        self.data['text_id'] = self.data['rev_id']
 
         self.annotations = pd.read_csv(
             self.data_dir / 'attack_annotations.tsv', sep='\t').dropna()
+        self.annotations['annotator_id'] = self.annotations['worker_id']
+        self.annotations['text_id'] = self.annotations['rev_id']
 
         if self.normalize:
             self.normalize_labels()

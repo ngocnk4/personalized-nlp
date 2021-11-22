@@ -16,7 +16,7 @@ os.environ["WANDB_START_METHOD"] = "thread"
 if __name__ == "__main__":
     regression = False
     datamodule_clses = [ToxicityDataModule, AttackDataModule, AggressionDataModule][1:2]
-    embedding_types = ['labse', 'mpnet', 'xlmr', 'deberta', 'bert', 'random', 'cbow', 'skipgram']
+    embedding_types = ['random', 'cbow', 'skipgram', 'labse', 'mpnet', 'xlmr', 'deberta', 'bert']
     model_types = ['baseline', 'onehot', 'peb', 'word_bias', 'bias', 'embedding', 'word_embedding']
     wandb_entity_name = 'persemo'
     wandb_project_name = 'WikiDetoxAttack'
