@@ -15,12 +15,12 @@ os.environ["WANDB_START_METHOD"] = "thread"
 
 if __name__ == "__main__":
     regression = False
-    datamodule_clses = [ToxicityDataModule, AttackDataModule, AggressionDataModule]
-    embedding_types = ['labse', 'mpnet', 'xlmr', 'random']
+    datamodule_clses = [ToxicityDataModule, AttackDataModule, AggressionDataModule][1:2]
+    embedding_types = ['labse', 'mpnet', 'xlmr', 'deberta', 'bert', 'random', 'cbow', 'skipgram']
     model_types = ['baseline', 'onehot', 'peb', 'word_bias', 'bias', 'embedding', 'word_embedding']
     wandb_entity_name = 'persemo'
     wandb_project_name = 'WikiDetoxAttack'
-    fold_nums = 2
+    fold_nums = 10  # 2
     
     min_word_counts = [200]
     words_per_texts = [100]
@@ -29,7 +29,7 @@ if __name__ == "__main__":
     dp_embs = [0.25]
     embedding_dims = [50]
     epochs = 20
-    lr_rate = 1-e5  # 0.008
+    lr_rate = 1e-5  # 0.008
     
     use_cuda = True
 
