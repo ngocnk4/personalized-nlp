@@ -10,7 +10,7 @@ from personalized_nlp.datasets.wiki.aggression import AggressionDataModule
 from personalized_nlp.utils import seed_everything
 from pytorch_lightning import loggers as pl_loggers
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "99"  # "1"
 os.environ["WANDB_START_METHOD"] = "thread"
 
 if __name__ == "__main__":
@@ -18,7 +18,8 @@ if __name__ == "__main__":
     datamodule_clses = [ToxicityDataModule, AttackDataModule, AggressionDataModule]
     embedding_types = ['labse', 'mpnet', 'xlmr', 'random']
     model_types = ['baseline', 'onehot', 'peb', 'word_bias', 'bias', 'embedding', 'word_embedding']
-    wandb_project_name = 'Wiki_exp'
+    wandb_entity_name = 'persemo'
+    wandb_project_name = 'WikiDetoxAttack'
     fold_nums = 2
     
     min_word_counts = [200]
@@ -28,7 +29,7 @@ if __name__ == "__main__":
     dp_embs = [0.25]
     embedding_dims = [50]
     epochs = 20
-    lr_rate = 0.008
+    lr_rate = 1-e5  # 0.008
     
     use_cuda = True
 
@@ -67,6 +68,7 @@ if __name__ == "__main__":
                 save_dir=LOGS_DIR,
                 config=hparams,
                 project=wandb_project_name,
+                entity=wandb_entity_name,
                 log_model=False,
             )
 
