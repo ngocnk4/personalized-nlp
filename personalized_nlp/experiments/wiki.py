@@ -19,7 +19,7 @@ if __name__ == "__main__":
     embedding_types = ['random', 'cbow', 'xlmr', 'deberta', 'bert']  # ['random', 'cbow', 'skipgram', 'labse', 'mpnet', 'xlmr', 'deberta', 'bert']
     model_types = ['baseline', 'onehot', 'peb', 'word_bias', 'bias', 'embedding', 'word_embedding']
     wandb_entity_name = 'persemo'
-    wandb_project_name = 'WikiDetoxAttack2'
+    wandb_project_name = 'WikiDetoxAttackOriginalSplit'
     fold_nums = 1  # 10  # 2
     
     min_word_counts = [200]
