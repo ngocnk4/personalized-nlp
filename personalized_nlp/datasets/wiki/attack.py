@@ -75,4 +75,4 @@ class AttackDataModule(WikiDataModule):
     def _assign_splits(self):
         sizes = [0.55, 0.15, 0.15, 0.15]
         # self.data = split_texts(self.data, sizes)
-        self.data = split_texts_by_file(self.data, sizes, self.data_dir / 'attack_annotated_comments.tsv', '\t')
+        self.data = split_texts_by_original(self.data, sizes)

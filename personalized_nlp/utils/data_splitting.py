@@ -24,14 +24,8 @@ def split_texts(df, sizes):
     return df
 
 
-def split_texts_by_file(df, sizes, source_split_file, sep):
+def split_texts_by_original(df, sizes):
     present_ratio, past_ratio, future1_ratio, future2_ratio = sizes
-
-    split_df = pd.read_csv(source_split_file, sep=sep, usecols=['rev_id', 'split'])
-    print(f'DATAFRAME SIZE BEFORE JOIN: {len(df)}')
-    df = df.copy()
-    df = df.merge(split_df, how='inner', on='rev_id')
-    print(f'DATAFRAME SIZE AFTER JOIN: {len(df)}')
 
     past_present_count = len(df[df['split'] == 'train'])
 
