@@ -20,7 +20,7 @@ if __name__ == "__main__":
     model_types = ['baseline', 'onehot', 'peb', 'word_bias', 'bias', 'embedding', 'word_embedding']
     wandb_entity_name = 'persemo'
     wandb_project_name = 'WikiDetoxAttack2'
-    fold_nums = 10  # 2
+    fold_nums = 1  # 10  # 2
     
     min_word_counts = [200]
     words_per_texts = [100]

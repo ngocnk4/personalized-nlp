@@ -6,7 +6,7 @@ import pandas as pd
 
 from personalized_nlp.datasets.wiki.base import WikiDataModule
 from personalized_nlp.settings import STORAGE_DIR, ATTACK_URL
-from personalized_nlp.utils.data_splitting import split_texts
+from personalized_nlp.utils.data_splitting import split_texts, split_texts_by_file
 
 
 class AttackDataModule(WikiDataModule):
@@ -74,4 +74,5 @@ class AttackDataModule(WikiDataModule):
 
     def _assign_splits(self):
         sizes = [0.55, 0.15, 0.15, 0.15]
-        self.data = split_texts(self.data, sizes)
+        # self.data = split_texts(self.data, sizes)
+        self.data = split_texts_by_file(self.data, sizes, self.data_dir / 'attack_annotated_comments.tsv', '\t')
