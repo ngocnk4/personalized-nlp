@@ -18,7 +18,7 @@ if __name__ == "__main__":
     datamodule_cls = CockamamieGobbledegookDataModule
     embedding_types = ['labse', 'mpnet', 'xlmr', 'random', 'skipgram', 'cbow']
     model_types = ['baseline', 'onehot', 'peb', 'bias', 'embedding', 'word_embedding']
-    fold_nums = 2
+    fold_nums = 8
     limit_past_annotations_list = [None] # range(20)
     
     min_word_counts = [200]
@@ -27,7 +27,7 @@ if __name__ == "__main__":
     batch_size = 3000
     dp_embs = [0.25]
     embedding_dims = [50]
-    epochs = 20
+    epochs = 40
     lr_rate = 0.008
     
     use_cuda = True
