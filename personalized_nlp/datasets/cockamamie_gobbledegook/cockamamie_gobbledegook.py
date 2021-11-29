@@ -48,7 +48,7 @@ class CockamamieGobbledegookDataModule(BaseDataModule):
 
     def prepare_data(self) -> None:
         self.data = pd.read_csv(
-            self.data_dir / 'texts' / 'cockamamie_gobbledegook_texts_e.csv')
+            self.data_dir / 'texts' / 'cockamamie_texts_only_controversial_a_non_empty.csv')
         self.data['text'] = self.data['text_english']
         
         self.annotations = pd.read_csv(
