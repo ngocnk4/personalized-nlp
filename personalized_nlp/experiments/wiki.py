@@ -10,16 +10,16 @@ from personalized_nlp.datasets.wiki.aggression import AggressionDataModule
 from personalized_nlp.utils import seed_everything
 from pytorch_lightning import loggers as pl_loggers
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "99"  # "1"
+# os.environ["CUDA_VISIBLE_DEVICES"] = "99"  # "1"
 os.environ["WANDB_START_METHOD"] = "thread"
 
 if __name__ == "__main__":
     regression = False
     datamodule_clses = [ToxicityDataModule, AttackDataModule, AggressionDataModule][1:2]
-    embedding_types = ['random', 'cbow', 'skipgram', 'labse', 'mpnet', 'xlmr', 'deberta', 'bert']
+    embedding_types = ['random', 'cbow', 'xlmr', 'deberta', 'bert']  # ['random', 'cbow', 'skipgram', 'labse', 'mpnet', 'xlmr', 'deberta', 'bert']
     model_types = ['baseline', 'onehot', 'peb', 'word_bias', 'bias', 'embedding', 'word_embedding']
     wandb_entity_name = 'persemo'
-    wandb_project_name = 'WikiDetoxAttack'
+    wandb_project_name = 'WikiDetoxAttack2'
     fold_nums = 10  # 2
     
     min_word_counts = [200]
