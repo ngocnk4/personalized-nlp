@@ -6,7 +6,7 @@ import pandas as pd
 
 from personalized_nlp.datasets.wiki.base import WikiDataModule
 from personalized_nlp.settings import STORAGE_DIR, ATTACK_URL
-from personalized_nlp.utils.data_splitting import split_texts, split_texts_by_file
+from personalized_nlp.utils.data_splitting import split_texts, split_texts_by_original
 
 
 class AttackDataModule(WikiDataModule):
