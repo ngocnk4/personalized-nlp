@@ -15,12 +15,12 @@ from personalized_nlp.utils.callbacks.time import TimingCallback
 
 def train_test(datamodule, model, epochs=6, lr=1e-2, regression=False,
                use_cuda=False, test_fold=None, logger=None, log_model=False, 
-               custom_callbacks=None, **kwargs):
+               custom_callbacks=None, test_repetitions = 1, **kwargs):
     """ Train model and return predictions for test dataset"""
     train_loader = datamodule.train_dataloader(test_fold=test_fold)
     val_loader = datamodule.val_dataloader(test_fold=test_fold)
     test_loader = datamodule.test_dataloader(test_fold=test_fold)
-
+    
     if regression:
         class_names = datamodule.annotation_column
         if isinstance(datamodule.annotation_column, str):
@@ -53,8 +53,22 @@ def train_test(datamodule, model, epochs=6, lr=1e-2, regression=False,
     callbacks = [checkpoint_callback]
     if custom_callbacks is not None:
         callbacks = callbacks + custom_callbacks
-
+        
+    training_start_time = time.time()
+    
     trainer = pl.Trainer(gpus=1 if _use_cuda else 0, max_epochs=epochs, progress_bar_refresh_rate=20,
                          logger=logger, callbacks=callbacks)
     trainer.fit(model, train_loader, val_loader)
-    trainer.test(test_dataloaders=test_loader)
+
+    training_time = time.time() - training_start_time
+
+    testing_times = []
+    for _ in range(test_repetitions):
+        testing_start_time = time.time()
+        trainer.test(test_dataloaders=test_loader)
+        testing_time = time.time() - testing_start_time
+
+        testing_times.append(testing_time)
+    
+    return {'training_time': training_time,
+            'testing_time': testing_times}
