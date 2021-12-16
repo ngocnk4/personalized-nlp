@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 from torchmetrics import Accuracy, F1, Precision, Recall
 from personalized_nlp.utils.metrics import F1Class, PrecisionClass, RecallClass
-
+from time import time
 
 class Classifier(pl.LightningModule):
     def __init__(self, model, class_dims, lr, class_names=None):
@@ -37,6 +37,7 @@ class Classifier(pl.LightningModule):
                     average='macro', num_classes=num_classes)
 
         self.metrics = nn.ModuleDict(class_metrics)
+        self.testing_times = []
 
     def forward(self, x):
         x = self.model(x)
@@ -80,7 +81,10 @@ class Classifier(pl.LightningModule):
     def test_step(self, batch, batch_idx):
         x, y = batch
 
+        forward_start_time = time()
         output = self.forward(x)
+        self.testing_times.append(time() - forward_start_time)
+        
         loss = self.step(output=output, y=y)
 
         self.log('test_loss', loss, prog_bar=True)

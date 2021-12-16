@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from torchmetrics import MeanAbsoluteError, MeanSquaredError, R2Score
 import pytorch_lightning as pl
-
+from time import time
 
 class Regressor(pl.LightningModule):
     def __init__(self, model, lr, class_names):
@@ -25,6 +25,7 @@ class Regressor(pl.LightningModule):
                 class_metrics[f'{split}_r2_{class_name}'] = R2Score()
 
         self.metrics = nn.ModuleDict(class_metrics)
+        self.testing_times = []
 
     def forward(self, x):
         x = self.model(x)
@@ -62,7 +63,10 @@ class Regressor(pl.LightningModule):
         x, y = batch
         y = y.float()
 
+        
+        forward_start_time = time()
         output = self.forward(x)
+        self.testing_times.append(time() - forward_start_time)
 
         loss = nn.MSELoss()(output, y)
 

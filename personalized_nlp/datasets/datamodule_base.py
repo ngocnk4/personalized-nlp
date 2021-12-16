@@ -255,7 +255,7 @@ class BaseDataModule(LightningDataModule):
 
         return self._prepare_dataloader(dev_dataset, shuffle=False)
 
-    def test_dataloader(self, test_fold=None) -> DataLoader:
+    def test_dataloader(self, test_fold=None, repeat_times=1) -> DataLoader:
         """Returns dataloader for test part of the dataset.
 
         :param test_fold: Number of test fold used in test, defaults to None
@@ -272,6 +272,9 @@ class BaseDataModule(LightningDataModule):
         text_features = self._get_text_features()
         annotator_features = self._get_annotator_features()
 
+        test_X = np.vstack([test_X]*repeat_times)
+        test_y = np.vstack([test_y]*repeat_times)
+        
         test_dataset = BatchIndexedDataset(
             test_X,
             test_y,
