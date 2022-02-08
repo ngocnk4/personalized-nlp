@@ -27,9 +27,11 @@ def split_texts(df, sizes):
 def split_texts_by_original(df, sizes):
     present_ratio, past_ratio, future1_ratio, future2_ratio = sizes
 
+    df = df.copy()
+
     past_present_count = len(df[df['split'] == 'train'])
 
-    present_past_ratio = int(present_ratio / (present_ratio + past_ratio))
+    present_past_ratio = present_ratio / (present_ratio + past_ratio)
 
     present_count = int(present_past_ratio * past_present_count)
 
@@ -42,3 +44,4 @@ def split_texts_by_original(df, sizes):
     df.loc[df['split'] == 'test', ['split']] = 'future2'
 
     return df
+

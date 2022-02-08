@@ -58,6 +58,7 @@ class AttackDataModule(WikiDataModule):
             self.normalize_labels()
 
         self._assign_splits()
+        print(self.data.split.value_counts())
 
         personal_df = self.annotations_with_data.loc[self.annotations_with_data.split == 'past']
         self.compute_annotator_biases(personal_df)
@@ -76,3 +77,4 @@ class AttackDataModule(WikiDataModule):
         sizes = [0.55, 0.15, 0.15, 0.15]
         # self.data = split_texts(self.data, sizes)
         self.data = split_texts_by_original(self.data, sizes)
+
