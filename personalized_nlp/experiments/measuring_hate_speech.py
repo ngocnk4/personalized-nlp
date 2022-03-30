@@ -10,29 +10,29 @@ from personalized_nlp.utils.callbacks.outputs import SaveOutputsWandb, SaveOutpu
 
 from pytorch_lightning import loggers as pl_loggers
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "99"
 os.environ["WANDB_START_METHOD"] = "thread"
 
 if __name__ == "__main__":
     wandb_entity_name = 'persemo'
     wandb_project_name = "MeasuringHateSpeech"
 
-    regression = False
+    regression = True
     datamodule_clses = [MeasuringHateSpeechDataModule]
     stratify_by_options = [
         None,
         "users",
         "texts",
-    ]
+    ][-1:]
     embedding_types = ["xlmr", "bert", "deberta", "mpnet", "random"][0:]
     model_types = [
-        "baseline",
-        "onehot",
-        "peb",
-        "word_bias",
-        "bias",
+        # "onehot",
         "embedding",
-        "word_embedding",
+        "peb",
+        "baseline",
+        # "word_bias",
+        # "bias",
+        # "word_embedding",
         "transformer_user_id",
     ][:-1]
     fold_nums = 10
@@ -40,9 +40,9 @@ if __name__ == "__main__":
     append_annotator_ids = (
         True  # If true, use UserID model, else use standard transfromer
     )
-    batch_size = 10  # 10 for transformer
-    epochs = 20  # 3 for transformer
-    lr_rate = 0.008  # 5e-5 for transformer
+    batch_size = 4096  # 10 for transformer 2048 previously
+    epochs = 180  # 3 for transformer 40 previously
+    lr_rate = 0.0002  # 5e-5 for transformer 0.0008 previously
 
     use_cuda = True
 

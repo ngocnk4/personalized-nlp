@@ -36,7 +36,7 @@ class MeasuringHateSpeechDataModule(BaseDataModule):
             sep="\t",
         )
         self.data = self._remap_column_names(self.data)
-        self.data["text"] = self.data["text"].str.strip('"')
+        # self.data["text"] = self.data["text"].str.strip('"')
 
         self.annotators = pd.read_csv(
             self.data_dir / ("worker_demographics.tsv"),
