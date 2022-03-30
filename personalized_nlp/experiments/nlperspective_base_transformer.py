@@ -51,6 +51,7 @@ if __name__ == "__main__":
         data_module = datamodule_cls(
             embeddings_type=embeddings_type,
             normalize=regression,
+            classification=not regression,
             batch_size=batch_size,
             past_annotations_limit=limit_past_annotations,
         )
@@ -88,6 +89,7 @@ if __name__ == "__main__":
                 log_model=False,
             )
 
+            class_nums = len(data_module.class_dims)
             output_dim = len(data_module.class_dims) if regression else sum(data_module.class_dims)
             text_embedding_dim = data_module.text_embedding_dim
             model_cls = models_dict[model_type]
@@ -103,7 +105,8 @@ if __name__ == "__main__":
                 hidden_dim=100,
                 bias_vector_length=len(data_module.class_dims),
                 finetune=finetune,
-                model_name=embeddings_type
+                model_name=embeddings_type,
+                class_nums=class_nums
             )
             custom_callbacks = [SetWeightDecay(lr=lr_rate, weight_decay=weight_decay)]
             if finetune:
