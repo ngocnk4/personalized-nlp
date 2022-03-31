@@ -19,12 +19,12 @@ os.environ["CUDA_VISIBLE_DEVICES"] = '0'
 os.environ["WANDB_START_METHOD"] = "thread"
 
 if __name__ == "__main__":
-    regression = False
+    regression = True
     datamodule_cls = EmotionsPerspectiveDataModule
     embedding_types = ['roberta']
 
     model_types = ['transformer_baseline', 'past_embeddings']
-    wandb_project_name = 'studemo_classification'
+    wandb_project_name = 'studemo_regr_fix'
     limit_past_annotations_list = [None]  # range(20)
     fold_nums = 10
 
