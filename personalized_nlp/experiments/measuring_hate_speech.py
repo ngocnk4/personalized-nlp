@@ -10,7 +10,7 @@ from personalized_nlp.utils.callbacks.outputs import SaveOutputsWandb, SaveOutpu
 
 from pytorch_lightning import loggers as pl_loggers
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "99"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 os.environ["WANDB_START_METHOD"] = "thread"
 
 if __name__ == "__main__":
@@ -72,6 +72,9 @@ if __name__ == "__main__":
         )
 
         for model_type, fold_num in product(model_types, range(fold_nums)):
+
+            data_module._recompute_stats_for_fold(fold_num)
+
             hparams = {
                 "dataset": type(data_module).__name__,
                 "model_type": model_type,
@@ -98,8 +101,8 @@ if __name__ == "__main__":
             model = model_cls(
                 output_dim=output_dim,
                 text_embedding_dim=text_embedding_dim,
-                word_num=data_module.words_number + 1,
-                annotator_num=data_module.annotators_number + 1,
+                word_num=data_module.words_number + 2,
+                annotator_num=data_module.annotators_number + 2,
                 dp=0.0,
                 dp_emb=0.25,
                 embedding_dim=50,
