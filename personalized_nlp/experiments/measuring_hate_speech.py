@@ -120,8 +120,8 @@ if __name__ == "__main__":
                 logger=logger,
                 test_fold=fold_num,
                 custom_callbacks=[
-                    SaveOutputsWandb(save_name="wandb_outputs.csv",
-                                     save_text=True),
+                    # SaveOutputsWandb(save_name="wandb_outputs.csv",
+                    #                  save_text=True),
                     SaveOutputsLocal(
                         save_dir="measuring_hate_speech_experiments_outputs",
                         fold_num=fold_num,
