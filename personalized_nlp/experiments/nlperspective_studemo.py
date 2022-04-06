@@ -10,6 +10,7 @@ from personalized_nlp.utils import seed_everything
 from pytorch_lightning import loggers as pl_loggers
 
 from personalized_nlp.datasets.emotions_perspective.emotions_perspectives import EmotionsPerspectiveDataModule
+from personalized_nlp.utils.callbacks.optimizer import SetWeightDecay
 from personalized_nlp.utils.callbacks.transformer_lr_scheduler import TransformerLrScheduler
 
 torch.cuda.empty_cache()
@@ -22,40 +23,39 @@ if __name__ == "__main__":
     datamodule_cls = EmotionsPerspectiveDataModule
     embedding_types = ['roberta']
 
-    model_types = ['past_embeddings']
-    wandb_project_name = 'studemo_past_emb'
+    model_types = ['transformer_baseline', 'past_embeddings']
+    wandb_project_name = 'studemo_regr_2'
     limit_past_annotations_list = [None]  # range(20)
-    texts_num_in_annotator_past_emb_list = [4]
     fold_nums = 10
+    max_length = 256
 
     min_word_counts = [5]
     words_per_texts = [128]
 
+    weight_decay = 0.01
     batch_size = 16
     dp_embs = [0.25]
     embedding_dims = [50]
-    finetune_epochs_lr_setting = {False: (20, [1e-2, 1e-3]), True: (4, [5e-5, 1e-4])}
+    # finetune_epochs_lr_setting = {False: (20, [1e-3, 1e-4]), True: (4, [1e-4, 1e-5])}
+    finetune_epochs_lr_setting = {True: (4, [1e-3, 5e-4])}
     finetune_lr_list = []
     for ft, (epochs, lr_list) in finetune_epochs_lr_setting.items():
         for lr in lr_list:
             finetune_lr_list.append((ft, epochs, lr))
 
     use_cuda = True
-    custom_callbacks = [TransformerLrScheduler(warmup_proportion=0.1)]
 
-    for (min_word_count, words_per_text, embeddings_type, finetune_lr, limit_past_annotations,
-         texts_num_in_annotator_past_emb) in product(
-        min_word_counts, words_per_texts, embedding_types, finetune_lr_list, limit_past_annotations_list,
-        texts_num_in_annotator_past_emb_list
+    for (min_word_count, words_per_text, embeddings_type, finetune_lr, limit_past_annotations) in product(
+        min_word_counts, words_per_texts, embedding_types, finetune_lr_list, limit_past_annotations_list
     ):
         finetune, epochs, lr_rate = finetune_lr
         seed_everything()
         data_module = datamodule_cls(
             embeddings_type=embeddings_type,
             normalize=regression,
+            classification=not regression,
             batch_size=batch_size,
             past_annotations_limit=limit_past_annotations,
-            texts_num_in_annotator_past_emb=texts_num_in_annotator_past_emb
         )
         data_module.prepare_data()
         data_module.setup()
@@ -80,6 +80,7 @@ if __name__ == "__main__":
                 "dp_emb": dp_emb,
                 "num_epochs": epochs,
                 "learning_rate": lr_rate,
+                "weight_decay": weight_decay,
                 'finetune': finetune
             }
 
@@ -90,6 +91,7 @@ if __name__ == "__main__":
                 log_model=False,
             )
 
+            class_nums = len(data_module.class_dims)
             output_dim = len(data_module.class_dims) if regression else sum(data_module.class_dims)
             text_embedding_dim = data_module.text_embedding_dim
             model_cls = models_dict[model_type]
@@ -104,10 +106,14 @@ if __name__ == "__main__":
                 embedding_dim=embedding_dim,
                 hidden_dim=100,
                 bias_vector_length=len(data_module.class_dims),
-                texts_num_in_annotator_past_emb=texts_num_in_annotator_past_emb,
                 finetune=finetune,
-                model_name=embeddings_type
+                model_name=embeddings_type,
+                class_nums=class_nums,
+                max_length=max_length
             )
+            custom_callbacks = [SetWeightDecay(lr=lr_rate, weight_decay=weight_decay)]
+            if finetune:
+                custom_callbacks += [TransformerLrScheduler(warmup_proportion=0.1)]
 
             train_test(
                 data_module,
@@ -117,6 +123,7 @@ if __name__ == "__main__":
                 regression=regression,
                 use_cuda=use_cuda,
                 logger=logger,
-                test_fold=fold_num
+                test_fold=fold_num,
+                custom_callbacks=custom_callbacks
             )
             logger.experiment.finish()
