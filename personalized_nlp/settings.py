@@ -18,6 +18,7 @@ SKIPGRAM_EMBEDDINGS_PATH = STORAGE_DIR / 'word2vec' / 'kgr10.plain.skipgram.dim3
 EMBEDDINGS_SIZES = {
     'xlmr': 768,
     'bert': 768,
+    'roberta': 768,
     'labse': 768, 
     'mpnet': 768,
     'random': 768,
