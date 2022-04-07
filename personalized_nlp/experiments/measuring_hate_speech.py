@@ -15,7 +15,7 @@ os.environ["WANDB_START_METHOD"] = "thread"
 
 if __name__ == "__main__":
     wandb_entity_name = 'persemo'
-    wandb_project_name = "MeasuringHateSpeech"
+    wandb_project_name = "MeasuringHateSpeechBaselineMajorityVoting"
 
     regression = True
     datamodule_clses = [MeasuringHateSpeechDataModule]
@@ -24,7 +24,7 @@ if __name__ == "__main__":
         "users",
         "texts",
     ][-1:]
-    embedding_types = ["xlmr", "bert", "deberta", "mpnet", "random"][0:]
+    embedding_types = ["xlmr", "bert", "deberta", "mpnet", "random"][:1]
     model_types = [
         # "onehot",
         "embedding",
@@ -34,7 +34,7 @@ if __name__ == "__main__":
         # "bias",
         # "word_embedding",
         "transformer_user_id",
-    ][:-1]
+    ][2:-1]
     fold_nums = 10
 
     append_annotator_ids = (
@@ -62,6 +62,7 @@ if __name__ == "__main__":
             normalize=regression,
             batch_size=batch_size,
             stratify_folds_by=stratify_by,
+            major_voting=True,
         )
         data_module.prepare_data()
         data_module.setup()
