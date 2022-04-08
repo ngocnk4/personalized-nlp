@@ -24,7 +24,8 @@ EMBEDDINGS_SIZES = {
     'random': 768,
     'skipgram': 300,
     'cbow': 300,
-    'deberta': 1024
+    'deberta': 1024,
+    'roberta': 768,
 }
 
 TRANSFORMER_MODEL_STRINGS = {
