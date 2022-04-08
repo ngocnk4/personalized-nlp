@@ -163,13 +163,14 @@ class BaseDataModule(LightningDataModule):
         """Computes mean votes for every texts and replaces
         each annotator with dummy annotator with id = 0"""
         annotations = self.annotations
+        annotator_ids = annotations["annotator_id"]
+        annotations["annotator_id"] = 0 if is_annotator_replaced else annotator_ids
 
-        annotations["annotator_id"] = 0 if is_annotator_replaced else annotations
         major_votes = annotations.groupby("text_id")[self.annotation_column].mean()
         major_votes = major_votes.round() if is_rounded else major_votes
 
         self.annotations = major_votes.reset_index()
-        self.annotations["annotator_id"] = 0 if is_annotator_replaced else self.annotations
+        self.annotations["annotator_id"] = 0 if is_annotator_replaced else annotator_ids
 
     def compute_annotator_biases(self, personal_df: pd.DataFrame):
         if self.past_annotations_limit is not None:
