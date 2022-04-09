@@ -29,7 +29,7 @@ if __name__ == "__main__":
     datamodule_cls = GoEmotionsDataModule
     embedding_types = ['roberta']
     model_types = ['baseline_tuned']
-    wandb_project_name = 'goemo_baseline_multiple_annotator_tuned'
+    wandb_project_name = 'goemo_baseline_single_annotator_tuned_class'
     limit_past_annotations_list = [None]  # range(20)
     fold_nums = 10
     min_annotations_per_text = 2
