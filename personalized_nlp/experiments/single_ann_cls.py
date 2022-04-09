@@ -83,6 +83,8 @@ if __name__ == "__main__":
                 "dp_emb": dp_emb,
                 "nr_frozen_epochs": nr_frozen_epochs,
                 "weight_decay": weight_decay,
+                "learning_rate": lr_rate
+
             }
 
             logger = pl_loggers.WandbLogger(
