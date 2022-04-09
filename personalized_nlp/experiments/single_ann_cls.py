@@ -40,7 +40,7 @@ if __name__ == "__main__":
     dp_embs = [0.25]
     embedding_dims = [50]
     epochs = 20
-    lr_rates = [1e-5, 3e-5, 5e-5]
+    lr_rates = [1e-5]
     weight_decay = 0.01
     nr_frozen_epochs = 5
     eval_strat = "epoch"
