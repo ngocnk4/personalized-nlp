@@ -14,7 +14,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 os.environ["WANDB_START_METHOD"] = "thread"
 
 if __name__ == "__main__":
-    wandb_project_name = 'goemo_baseline_single_annotator_class'
+    wandb_project_name = 'goemo_baseline_multiple_annotator_class'
     regression = False
     datamodule_cls = GoEmotionsDataModule
     embedding_types = ['roberta']
@@ -38,7 +38,7 @@ if __name__ == "__main__":
 
         seed_everything()
         data_module = datamodule_cls(
-            embeddings_type=embeddings_type, is_averaged=False, normalize=regression, batch_size=batch_size, regression=regression)
+            embeddings_type=embeddings_type, is_averaged=True, normalize=regression, batch_size=batch_size, regression=regression)
         data_module.prepare_data()
         data_module.setup()
         data_module.compute_word_stats(
@@ -79,6 +79,7 @@ if __name__ == "__main__":
                 word_num=data_module.words_number,
                 annotator_num=data_module.annotators_number,
                 dp=0.0,
+                is_averaged=True,
                 dp_emb=dp_emb,
                 embedding_dim=embedding_dim,
                 hidden_dim=100,
