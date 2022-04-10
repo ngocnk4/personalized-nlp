@@ -10,12 +10,12 @@ from personalized_nlp.utils.callbacks.outputs import SaveOutputsWandb, SaveOutpu
 
 from pytorch_lightning import loggers as pl_loggers
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 os.environ["WANDB_START_METHOD"] = "thread"
 
 if __name__ == "__main__":
     wandb_entity_name = 'persemo'
-    wandb_project_name = "MeasuringHateSpeechBaselineMajorityVoting"
+    wandb_project_name = "MeasuringHateSpeech"  # "MeasuringHateSpeechBaselineMajorityVoting"
 
     regression = True
     datamodule_clses = [MeasuringHateSpeechDataModule]
@@ -27,22 +27,23 @@ if __name__ == "__main__":
     embedding_types = ["xlmr", "bert", "deberta", "mpnet", "random"][:1]
     model_types = [
         # "onehot",
-        "embedding",
-        "peb",
         "baseline",
+        "peb",
+        "embedding",
         # "word_bias",
         # "bias",
         # "word_embedding",
         "transformer_user_id",
-    ][2:-1]
+    ][-1:]
     fold_nums = 10
 
+    majority_vote = False
     append_annotator_ids = (
         True  # If true, use UserID model, else use standard transfromer
     )
-    batch_size = 4096  # 10 for transformer 2048 previously
-    epochs = 180  # 3 for transformer 40 previously
-    lr_rate = 0.0002  # 5e-5 for transformer 0.0008 previously
+    batch_size = 30  # 10 for transformer 4096 otherwise
+    epochs = 3  # 3 for transformer 180 otherwise
+    lr_rate = 1e-5  # 1e-5 for transformer 0.0002 otherwise
 
     use_cuda = True
 
@@ -62,7 +63,7 @@ if __name__ == "__main__":
             normalize=regression,
             batch_size=batch_size,
             stratify_folds_by=stratify_by,
-            major_voting=True,
+            major_voting=majority_vote,
         )
         data_module.prepare_data()
         data_module.setup()
@@ -84,6 +85,7 @@ if __name__ == "__main__":
                 "regression": regression,
                 "stratify_by": stratify_by,
                 "append_annotator_ids": append_annotator_ids,
+                'majority_vote': majority_vote
             }
 
             logger = pl_loggers.WandbLogger(
@@ -124,10 +126,11 @@ if __name__ == "__main__":
                     # SaveOutputsWandb(save_name="wandb_outputs.csv",
                     #                  save_text=True),
                     SaveOutputsLocal(
-                        save_dir="measuring_hate_speech_experiments_outputs",
-                        fold_num=fold_num,
+                        save_dir=
+                        f"lrec_{type(data_module).__name__}_{model_type}",
+                        # fold_num=fold_num,
                         experiment="measuring_hate_speech",
-                    ),
+                        **hparams),
                 ],
             )
 
