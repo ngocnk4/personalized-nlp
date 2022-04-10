@@ -9,6 +9,7 @@ class Net(nn.Module):
         self.text_embedding_dim = text_embedding_dim
         self.fc1 = nn.Linear(text_embedding_dim, output_dim) 
         self.max_seq_len = max_seq_len
+        self.frozen = False
 
 
     def forward(self, features):
