@@ -21,15 +21,15 @@ def seed_everything():
 
 torch.cuda.empty_cache()
 
-os.environ["CUDA_VISIBLE_DEVICES"] = '0'
+os.environ["CUDA_VISIBLE_DEVICES"] = '1'
 os.environ["WANDB_START_METHOD"] = "thread"
 
 if __name__ == "__main__":
     regression = False
     datamodule_cls = GoEmotionsDataModule
     embedding_types = ['roberta']
-    model_types = ['baseline_tuned']
-    wandb_project_name = 'goemo_baseline_multiple_annotator_tuned_class'
+    model_types = ['baseline']
+    wandb_project_name = 'goemo_baseline_multiple_annotator_class'
     limit_past_annotations_list = [None]  # range(20)
     fold_nums = 10
     min_annotations_per_text = 2
@@ -41,9 +41,9 @@ if __name__ == "__main__":
     dp_embs = [0.25]
     embedding_dims = [50]
     epochs = 20
-    lr_rates = [1e-5, 3e-5, 5e-5]
+    lr_rates = [3e-5]
     weight_decay = 0.01
-    nr_frozen_epochs = 5
+    nr_frozen_epochs = 0
     eval_strat = "epoch"
 
     use_cuda = True
